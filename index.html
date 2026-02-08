@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatApp | Connect</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100 font-sans">
+
+    <div class="flex h-screen overflow-hidden">
+        
+        <aside class="w-1/4 bg-white border-r border-gray-200 flex flex-col">
+            <div class="p-4 border-b flex justify-between items-center">
+                <h1 class="text-xl font-bold text-indigo-600">Messages</h1>
+                <button class="text-gray-500 hover:text-indigo-600"><i class="fa-solid fa-pen-to-square"></i></button>
+            </div>
+            
+            <div class="overflow-y-auto flex-1">
+                <div class="flex items-center p-4 bg-indigo-50 border-l-4 border-indigo-500 cursor-pointer">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Doe&background=random" class="w-12 h-12 rounded-full">
+                    <div class="ml-4 overflow-hidden">
+                        <p class="font-semibold text-gray-900">Alex Doe</p>
+                        <p class="text-sm text-gray-500 truncate">See you at 8:00 PM!</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center p-4 hover:bg-gray-50 cursor-pointer border-b border-gray-100">
+                    <img src="https://ui-avatars.com/api/?name=Jordan+Smith&background=random" class="w-12 h-12 rounded-full">
+                    <div class="ml-4">
+                        <p class="font-semibold text-gray-900">Jordan Smith</p>
+                        <p class="text-sm text-gray-400">Typing...</p>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <main class="flex-1 flex flex-col bg-gray-50">
+            
+            <header class="p-4 bg-white border-b flex justify-between items-center shadow-sm">
+                <div class="flex items-center">
+                    <img src="https://ui-avatars.com/api/?name=Alex+Doe&background=random" class="w-10 h-10 rounded-full">
+                    <div class="ml-3">
+                        <p class="font-bold text-gray-800">Alex Doe</p>
+                        <p class="text-xs text-green-500 font-medium">Online</p>
+                    </div>
+                </div>
+                <div class="text-gray-400 space-x-4">
+                    <i class="fa-solid fa-phone cursor-pointer hover:text-indigo-600"></i>
+                    <i class="fa-solid fa-video cursor-pointer hover:text-indigo-600"></i>
+                    <i class="fa-solid fa-ellipsis-vertical cursor-pointer hover:text-indigo-600"></i>
+                </div>
+            </header>
+
+            <div class="flex-1 overflow-y-auto p-6 space-y-4">
+                
+                <div class="flex items-end">
+                    <div class="bg-white text-gray-800 p-3 rounded-lg rounded-bl-none shadow-sm max-w-md border border-gray-100">
+                        Hey! Are we still on for the project meeting?
+                        <p class="text-[10px] text-gray-400 mt-1 text-right">10:42 AM</p>
+                    </div>
+                </div>
+
+                <div class="flex items-end justify-end">
+                    <div class="bg-indigo-600 text-white p-3 rounded-lg rounded-br-none shadow-md max-w-md">
+                        Absolutely. I've finished the frontend mockups.
+                        <p class="text-[10px] text-indigo-200 mt-1 text-right">10:45 AM</p>
+                    </div>
+                </div>
+
+            </div>
+
+            <footer class="p-4 bg-white border-t">
+                <div class="flex items-center bg-gray-100 rounded-full px-4 py-2">
+                    <button class="text-gray-500 hover:text-indigo-600 mr-3">
+                        <i class="fa-regular fa-face-smile text-xl"></i>
+                    </button>
+                    <input type="text" placeholder="Type a message..." class="bg-transparent flex-1 outline-none text-gray-700">
+                    <button class="ml-3 bg-indigo-600 text-white w-10 h-10 rounded-full flex items-center justify-center hover:bg-indigo-700 transition">
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+</body>
+</html>
