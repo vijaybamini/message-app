@@ -1,13 +1,11 @@
-// ================= SERVER RESPONSIBILITIES WITH CODE ================= // This file shows EACH job of the server step‑by‑step.
 
-// ===== 1️⃣ Install dependencies ===== // npm init -y // npm install express mysql2 cors
 const express = require("express");
-const app = express();
-app.use(cors());
-app.use(express.json());
 const cors = require("cors");
 const mysql = require("mysql2");
 
+const app = express();
+app.use(cors());
+app.use(express.json());
 const db = mysql.createConnection({
   host: "mysql-28516d6c-vijaykumarbamini-8a07.c.aivencloud.com",
   port: 21961,
@@ -19,13 +17,14 @@ const db = mysql.createConnection({
   }
 });
 
+
 db.connect(err => {
   if (err) {
     console.error("DB connection failed:", err);
     return;
   }
 
-  console.log("Connected to Aiven MySQL");
+  console.log("✅ Connected to Aiven MySQL");
 
   const createTable = `
     CREATE TABLE IF NOT EXISTS messages (
@@ -36,84 +35,52 @@ db.connect(err => {
     )
   `;
 
-  db.query(createTable, (err) => {
+  db.query(createTable, err => {
     if (err) console.error("Table creation error:", err);
     else console.log("✅ messages table ready");
   });
 });
-// ========================================================== // ===== 2️⃣ CONNECT TO DATABASE (Server ↔ MySQL) ====
-// ========================================================== // ===== 3️⃣ RECEIVE INPUT FROM FRONTEND ==================== // ==========================================================
 
-// POST /messages → frontend sends message here
-
-app.post('/messages', (req, res) => {
-
-// ===== 4️⃣ VALIDATE DATA ================================ const { text, sender } = req.body;
-
-if (!text || text.trim() === '') { return res.status(400).json({ error: 'Message cannot be empty' }); }
-
-if (text.length > 500) { return res.status(400).json({ error: 'Message too long' }); }
-
-// ===== 5️⃣ STORE DATA IN DATABASE =======================
-
-const sql = 'INSERT INTO messages (text, sender) VALUES (?, ?)';
-
-db.query(sql, [text, sender || 'Anonymous'], (err, result) => { if (err) return res.status(500).json({ error: 'Database error' });
-
-// ===== 6️⃣ SEND RESPONSE BACK TO FRONTEND =============
-
-res.json({
-  status: 'saved',
-  id: result.insertId,
-  text,
-  sender: sender || 'Anonymous'
+app.get("/", (req, res) => {
+  res.send("Chat server is running");
 });
 
-}); });
+app.get("/messages", (req, res) => {
+  const sql = "SELECT * FROM messages ORDER BY created_at ASC";
 
-// ========================================================== // ===== 7️⃣ SEND OLD MESSAGES WHEN PAGE LOADS ============== // ==========================================================
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: "Database error" });
+    res.json(results);
+  });
+});
 
-// GET /messages → frontend calls this on refresh
+app.post("/messages", (req, res) => {
+  const { text, sender } = req.body;
 
-app.get('/messages', (req, res) => {
+  if (!text || text.trim() === "") {
+    return res.status(400).json({ error: "Message cannot be empty" });
+  }
 
-const sql = 'SELECT * FROM messages ORDER BY created_at ASC';
+  if (text.length > 500) {
+    return res.status(400).json({ error: "Message too long" });
+  }
 
-db.query(sql, (err, results) => { if (err) return res.status(500).json({ error: 'Database error' });
+  const sql = "INSERT INTO messages (text, sender) VALUES (?, ?)";
 
-res.json(results);
+  db.query(sql, [text, sender || "Anonymous"], (err, result) => {
+    if (err) return res.status(500).json({ error: "Database error" });
 
-}); });
+    res.json({
+      status: "saved",
+      id: result.insertId,
+      text,
+      sender: sender || "Anonymous"
+    });
+  });
+});
 
-// ========================================================== // ===== 8️⃣ START THE SERVER ================================ // ==========================================================
+const PORT = process.env.PORT || 3000;
 
-const PORT =process.env.PORT || 3000;
-
-app.listen(PORT, () => { console.log(🚀 Server running at http://localhost:${PORT}); });
-
-// ========================================================== // ===== SUMMARY OF SERVER JOBS ============================= // ==========================================================
-
-/*
-
-1. Connect to database
-
-
-2. Receive request from frontend
-
-
-3. Validate data
-
-
-4. Store message in MySQL
-
-
-5. Send response back
-
-
-6. Provide old messages on refresh
-
-
-7. Run continuously waiting for requests */
-
-
-                        
+app.listen(PORT, () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
