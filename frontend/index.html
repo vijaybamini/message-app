@@ -1,46 +1,60 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Simple Chat</title>
 </head>
 <body>
-  <h2>One-to-One Chat</h2>  <div id="messages"></div>  <input id="messageInput" type="text" placeholder="Type a message..." />
-  <button onclick="sendMessage()">Send</button>  <script>
+  <h2>One-to-One Chat</h2>
+
+  <div id="messages"></div>
+
+  <input id="messageInput" type="text" placeholder="Type a message..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <script>
     const messagesDiv = document.getElementById('messages');
     const input = document.getElementById('messageInput');
 
-    // Load messages from localStorage on page load
-    const savedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
-    savedMessages.forEach(msg => addMessage(msg));
-
-    function saveMessages() {
-      const allMessages = Array.from(messagesDiv.children).map(div => div.textContent);
-      localStorage.setItem('chatMessages', JSON.stringify(allMessages));
-    }
+    const API_URL = "https://message-app-1sj0.onrender.com/"; // change after deployment
 
     function addMessage(text) {
       const msg = document.createElement('div');
       msg.textContent = text;
       messagesDiv.appendChild(msg);
-      saveMessages();
     }
 
-    function sendMessage() {
+    // Load messages from backend
+    async function loadMessages() {
+      const res = await fetch(`${API_URL}/messages`);
+      const data = await res.json();
+
+      messagesDiv.innerHTML = "";
+      data.forEach(m => addMessage(`${m.sender}: ${m.text}`));
+    }
+
+    // Send message to backend
+    async function sendMessage() {
       const text = input.value.trim();
       if (!text) return;
 
-      addMessage('You: ' + text);
-      input.value = '';
+      await fetch(`${API_URL}/messages`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text, sender: "You" })
+      });
 
-      // Fake reply for testing
-      setTimeout(() => {
-        addMessage('Friend: ' + text);
-      }, 500);
+      input.value = "";
+      loadMessages();
     }
 
-    input.addEventListener('keypress', function (e) {
-      if (e.key === 'Enter') sendMessage();
+    input.addEventListener("keypress", e => {
+      if (e.key === "Enter") sendMessage();
     });
-  </script></body>
+
+    // Load messages when page opens
+    loadMessages();
+  </script>
+</body>
 </html>
