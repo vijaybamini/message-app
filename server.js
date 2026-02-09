@@ -8,7 +8,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 // Serve your static HTML/CSS/JS files
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname,'public')));
 
 io.on('connection', (socket) => {
     console.log('A user connected:', socket.id);
