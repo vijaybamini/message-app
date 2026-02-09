@@ -1,0 +1,46 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple Chat</title>
+</head>
+<body>
+  <h2>One-to-One Chat</h2>  <div id="messages"></div>  <input id="messageInput" type="text" placeholder="Type a message..." />
+  <button onclick="sendMessage()">Send</button>  <script>
+    const messagesDiv = document.getElementById('messages');
+    const input = document.getElementById('messageInput');
+
+    // Load messages from localStorage on page load
+    const savedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+    savedMessages.forEach(msg => addMessage(msg));
+
+    function saveMessages() {
+      const allMessages = Array.from(messagesDiv.children).map(div => div.textContent);
+      localStorage.setItem('chatMessages', JSON.stringify(allMessages));
+    }
+
+    function addMessage(text) {
+      const msg = document.createElement('div');
+      msg.textContent = text;
+      messagesDiv.appendChild(msg);
+      saveMessages();
+    }
+
+    function sendMessage() {
+      const text = input.value.trim();
+      if (!text) return;
+
+      addMessage('You: ' + text);
+      input.value = '';
+
+      // Fake reply for testing
+      setTimeout(() => {
+        addMessage('Friend: ' + text);
+      }, 500);
+    }
+
+    input.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') sendMessage();
+    });
+  </script></body>
+</html>
