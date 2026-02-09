@@ -21,10 +21,25 @@ const db = mysql.createConnection({
 
 db.connect(err => {
   if (err) {
-    console.error("❌ Database connection failed:", err);
+    console.error("DB connection failed:", err);
     return;
   }
-  console.log("✅ Connected to Aiven MySQL");
+
+  console.log("Connected to Aiven MySQL");
+
+  const createTable = `
+    CREATE TABLE IF NOT EXISTS messages (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      text TEXT NOT NULL,
+      sender VARCHAR(50) NOT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+  `;
+
+  db.query(createTable, (err) => {
+    if (err) console.error("Table creation error:", err);
+    else console.log("✅ messages table ready");
+  });
 });
 // ========================================================== // ===== 2️⃣ CONNECT TO DATABASE (Server ↔ MySQL) ====
 // ========================================================== // ===== 3️⃣ RECEIVE INPUT FROM FRONTEND ==================== // ==========================================================
