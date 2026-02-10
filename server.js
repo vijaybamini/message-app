@@ -126,7 +126,7 @@ socket.on("send_message", (data) => {
   });
 });
 //deleting messages route.
-app.delete("/admin/clear-messages", (req, res) => {
+app.get("/admin/clear-messages", (req, res) => {
   db.query("TRUNCATE TABLE messages", (err) => {
     if (err) {
       console.error("Clear DB error:", err);
