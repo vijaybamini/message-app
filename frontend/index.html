@@ -14,6 +14,14 @@
   <button onclick="sendMessage()">Send</button>
 
   <script>
+    let username = localStorage.getItem("chat_username");
+
+if (!username) {
+  username = prompt("Enter your name:");
+  if (!username) username = "Anonymous";
+  localStorage.setItem("chat_username", username);
+}
+
     const messagesDiv = document.getElementById('messages');
     const input = document.getElementById('messageInput');
 
@@ -42,7 +50,8 @@
       await fetch(`${API_URL}/messages`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ text, sender: "You" })
+       body: JSON.stringify({ text, sender: username })
+
       });
 
       input.value = "";
