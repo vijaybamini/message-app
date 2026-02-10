@@ -51,7 +51,7 @@ if (!username) {
   const text = input.value.trim();
   if (!text) return;
 
-  socket.broadcast.emit("send_message", {
+  socket.emit("send_message", {
     text,
     sender: username
   });
