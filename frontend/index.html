@@ -12,8 +12,12 @@
 
   <input id="messageInput" type="text" placeholder="Type a message..." />
   <button onclick="sendMessage()">Send</button>
+  
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
 
   <script>
+    const socket = io("https://message-app-1sj0.onrender.com");
+
     let username = localStorage.getItem("chat_username");
 
 if (!username) {
@@ -43,20 +47,21 @@ if (!username) {
     }
 
     // Send message to backend
-    async function sendMessage() {
-      const text = input.value.trim();
-      if (!text) return;
+ function sendMessage() {
+  const text = input.value.trim();
+  if (!text) return;
 
-      await fetch(`${API_URL}/messages`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ text, sender: username })
+  socket.broadcast.emit("send_message", {
+    text,
+    sender: username
+  });
 
-      });
+  input.value = "";
+}
+socket.on("receive_message", (data) => {
+  addMessage(`${data.sender}: ${data.text}`);
+});
 
-      input.value = "";
-      loadMessages();
-    }
 
     input.addEventListener("keypress", e => {
       if (e.key === "Enter") sendMessage();
