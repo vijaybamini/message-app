@@ -96,12 +96,30 @@ io.on("connection", (socket) => {
   console.log("🟢 User connected:", socket.id);
 
   // Receive message from a user
-  socket.on("send_message", (data) => {
-    console.log("📩 Message received:", data);
+socket.on("send_message", (data) => {
+  const { text, sender } = data;
 
-    // Send message to ALL connected users
-    io.emit("receive_message", data);
+  // Validate message
+  if (!text || text.trim() === "") return;
+
+  const sql = "INSERT INTO messages (text, sender) VALUES (?, ?)";
+
+  db.query(sql, [text, sender || "Anonymous"], (err, result) => {
+    if (err) {
+      console.error("❌ DB insert error:", err);
+      return;
+    }
+
+    const savedMessage = {
+      id: result.insertId,
+      text,
+      sender: sender || "Anonymous"
+    };
+
+    // Broadcast saved message to all users
+    io.emit("receive_message", savedMessage);
   });
+});
 
   socket.on("disconnect", () => {
     console.log("🔴 User disconnected:", socket.id);
