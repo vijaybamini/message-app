@@ -125,8 +125,21 @@ socket.on("send_message", (data) => {
     console.log("🔴 User disconnected:", socket.id);
   });
 });
+//deleting messages route.
+app.delete("/admin/clear-messages", (req, res) => {
+  db.query("TRUNCATE TABLE messages", (err) => {
+    if (err) {
+      console.error("Clear DB error:", err);
+      return res.status(500).json({ error: "Failed to clear messages" });
+    }
+
+    res.json({ success: true, message: "All messages cleared" });
+  });
+});
 
 
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
 });
+
+
