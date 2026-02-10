@@ -95,10 +95,19 @@ const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("🟢 User connected:", socket.id);
 
+  // Receive message from a user
+  socket.on("send_message", (data) => {
+    console.log("📩 Message received:", data);
+
+    // Send message to ALL connected users
+    io.emit("receive_message", data);
+  });
+
   socket.on("disconnect", () => {
     console.log("🔴 User disconnected:", socket.id);
   });
 });
+
 
 server.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
