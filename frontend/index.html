@@ -35,6 +35,8 @@ if (!username) {
       const msg = document.createElement('div');
       msg.textContent = text;
       messagesDiv.appendChild(msg);
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+
     }
 
     // Load messages from backend
