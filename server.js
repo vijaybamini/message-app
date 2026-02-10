@@ -13,7 +13,7 @@ const db = mysql.createConnection({
   password: "AVNS_6IFWIK_Hopxn2pVBjkp",
   database: "defaultdb",
   ssl: {
-    rejectUnauthorized: true
+    rejectUnauthorized: false
   }
 });
 
