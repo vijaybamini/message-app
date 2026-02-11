@@ -74,6 +74,11 @@ socket.on("receive_message", (data) => {
 
     // Load messages when page opens
     loadMessages();
+    if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js")
+    .then(() => console.log("Service Worker registered"));
+}
+
   </script>
 </body>
 </html>
